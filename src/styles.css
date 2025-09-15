@@ -300,3 +300,27 @@
   color:#06101c;
   border:1px solid rgba(0,0,0,0.2);
 }
+/* Mobil uyum düzenlemeleri */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container, .app {
+  max-width: 100%;
+  padding: 10px;
+}
+
+button, input, select {
+  width: 100%;       /* Buton ve inputlar ekran genişliğini kaplasın */
+  max-width: 400px;  /* Ama çok geniş ekranlarda taşmasın */
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .menu, .toolbar {
+    flex-direction: column; /* Menü elemanlarını alt alta diz */
+    align-items: stretch;
+  }
+}
