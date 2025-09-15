@@ -93,3 +93,17 @@ input, select, textarea {
     padding: 12px;
   }
 }
+/* İkon ile yazı arasına boşluk ekle */
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;   /* boşluk */
+}
+
+/* Buton grupları taşmasın diye */
+.toolbar, .menu, .actions, .filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
