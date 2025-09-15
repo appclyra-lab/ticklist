@@ -15,7 +15,7 @@ export default function App() {
 
   return (
     <>
-      <h1>TickList App v2 🚀</h1>
+      <h1>TickList App v3 🚀</h1>
       {user ? <AuthedApp user={user} /> : <Auth />}
     </>
   );
