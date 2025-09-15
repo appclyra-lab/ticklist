@@ -324,3 +324,40 @@ button, input, select {
     align-items: stretch;
   }
 }
+/* === Mobile fixes === */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden; /* yatay kaymayı kapat */
+}
+
+/* Küçük ekranda form ve butonları tam genişlik yap */
+@media (max-width: 480px) {
+  input, select, textarea, button {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Üstteki buton/kart grupları sarsın */
+  .toolbar, .menu, .actions, .filters, .topbar, .header, .controls {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Kart/tuş/pill gibi bloklar satıra göre küçülsün */
+  .card, .tile, .btn, .pill, .badge, .panel,
+  [class*="card"], [class*="tile"], [class*="badge"] {
+    flex: 1 1 150px !important;   /* min 150px, kalanını paylaş */
+    min-width: 140px !important;
+    max-width: 100% !important;
+  }
+
+  /* inline style ile verilmiş sabit genişlikleri etkisizleştir */
+  [style*="width:"], [style*="min-width:"], [style*="max-width:"] {
+    width: auto !important;
+    max-width: 100% !important;
+  }
+}
