@@ -1,49 +1,102 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./styles.css";
-import Auth from "./components/Auth.jsx";
-import AuthedApp from "./components/AuthedApp.jsx";
-import { auth } from "./lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
 
-export default function App() {
-  const [user, setUser] = useState(null);
+function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [soundOn, setSoundOn] = useState(true);
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+  const [filter, setFilter] = useState("Tümü");
 
-  // Tema state (light/dark)
-  const [theme, setTheme] = useState(() => {
-    return (
-      localStorage.getItem("theme") ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light")
-    );
-  });
+  // Tema değiştirme
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+    document.body.classList.toggle("dark-mode", !darkMode);
+  };
 
-  // Tema class'ını html'e uygula
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  // Ses aç/kapa
+  const toggleSound = () => {
+    setSoundOn(!soundOn);
+  };
 
-  // Firebase auth değişikliklerini dinle
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => setUser(u || null));
-    return () => unsub();
-  }, []);
+  // Görev ekleme
+  const addTask = () => {
+    if (newTask.trim() === "") return;
+    setTasks([...tasks, { text: newTask, done: false }]);
+    setNewTask("");
+  };
 
-  // Tema değiştirme fonksiyonu
-  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+  // Görev durumunu değiştirme
+  const toggleTask = (index) => {
+    const updated = [...tasks];
+    updated[index].done = !updated[index].done;
+    setTasks(updated);
+  };
+
+  // Filtre
+  const filteredTasks =
+    filter === "Aktif"
+      ? tasks.filter((t) => !t.done)
+      : filter === "Tamamlanan"
+      ? tasks.filter((t) => t.done)
+      : tasks;
 
   return (
-    <>
-      {/* Üst kısımda tema değiştirme butonu */}
-      <div className="toolbar" style={{ padding: "10px", textAlign: "center" }}>
-        <button type="button" onClick={toggleTheme}>
-          {theme === "dark" ? "🌞 Açık Tema" : "🌙 Koyu Tema"}
+    <div className={`app ${darkMode ? "dark" : ""}`}>
+      {/* Tema */}
+      <button onClick={toggleTheme} className="btn">
+        {darkMode ? "🌙 Koyu Tema" : "☀️ Açık Tema"}
+      </button>
+
+      {/* Ses */}
+      <button onClick={toggleSound} className="btn">
+        {soundOn ? "🔊 Ses açık" : "🔇 Ses kapalı"}
+      </button>
+
+      {/* Çıkış */}
+      <button className="btn">Çıkış</button>
+
+      <h1>TickList1</h1>
+
+      {/* Görev ekleme */}
+      <input
+        type="text"
+        placeholder="Yeni görev yaz ve Enter’a bas..."
+        value={newTask}
+        onChange={(e) => setNewTask(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && addTask()}
+      />
+      <button onClick={addTask} className="btn">
+        Ekle
+      </button>
+
+      {/* Filtreler */}
+      <div>
+        <button onClick={() => setFilter("Tümü")} className="btn">
+          Tümü
+        </button>
+        <button onClick={() => setFilter("Aktif")} className="btn">
+          Aktif
+        </button>
+        <button onClick={() => setFilter("Tamamlanan")} className="btn">
+          Tamamlanan
         </button>
       </div>
 
-      {/* Kullanıcı varsa uygulama, yoksa login ekranı */}
-      {user ? <AuthedApp user={user} /> : <Auth />}
-    </>
+      {/* Görev listesi */}
+      <ul>
+        {filteredTasks.map((task, i) => (
+          <li
+            key={i}
+            onClick={() => toggleTask(i)}
+            style={{ textDecoration: task.done ? "line-through" : "none" }}
+          >
+            {task.text}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
+
+export default App;
