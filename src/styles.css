@@ -1,3 +1,20 @@
+:root{
+  --bg:#ffffff; --fg:#0f172a;
+  --card:#ffffff; --muted:#f1f5f9;
+  --btn:#4f46e5; --btn-fg:#ffffff;
+}
+
+.dark{
+  --bg:#0b1220; --fg:#e5e7eb;
+  --card:#0f172a; --muted:#111827;
+  --btn:#6366f1; --btn-fg:#ffffff;
+}
+
+html, body{ background:var(--bg); color:var(--fg); }
+
+.card{ background:var(--card); }
+button{ background:var(--btn); color:var(--btn-fg); }
+
 /* === GENEL STİLLER === */
 *,
 *::before,

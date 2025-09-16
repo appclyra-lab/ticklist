@@ -8,14 +8,41 @@ import { onAuthStateChanged } from "firebase/auth";
 export default function App() {
   const [user, setUser] = useState(null);
 
+  // Tema state (light/dark)
+  const [theme, setTheme] = useState(() => {
+    return (
+      localStorage.getItem("theme") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light")
+    );
+  });
+
+  // Tema class'ını html'e uygula
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  // Firebase auth değişikliklerini dinle
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => setUser(u || null));
     return () => unsub();
   }, []);
 
+  // Tema değiştirme fonksiyonu
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
   return (
     <>
-      <h1>TickList App v3 🚀</h1>
+      {/* Üst kısımda tema değiştirme butonu */}
+      <div className="toolbar" style={{ padding: "10px", textAlign: "center" }}>
+        <button type="button" onClick={toggleTheme}>
+          {theme === "dark" ? "🌞 Açık Tema" : "🌙 Koyu Tema"}
+        </button>
+      </div>
+
+      {/* Kullanıcı varsa uygulama, yoksa login ekranı */}
       {user ? <AuthedApp user={user} /> : <Auth />}
     </>
   );
